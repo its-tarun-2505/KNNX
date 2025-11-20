@@ -1,0 +1,101 @@
+import Player from "./Player.js";
+import Room from "./Room.js";
+import roomsData from "../data/rooms.js";
+import { IO, ask } from "../utils/input.js";
+
+import LockedDoorPuzzle from "./puzzles/LockedDoorPuzzle.js";
+import TorchPuzzle from "./puzzles/TorchPuzzle.js";
+
+class GameManager {
+    constructor() {
+        // Create a default player
+        this.player = new Player("Unnamed Hero");
+
+        // Storage for all rooms
+        this.rooms = {};
+
+        // Load all rooms into memory
+        this.initializeRooms();
+    }
+
+    // Converts room data into actual room objects
+    initializeRooms() {
+        roomsData.forEach((roomInfo) => {
+            this.rooms[roomInfo.name] = new Room(roomInfo);
+        });
+    }
+
+    // Game start point
+    async startGame() {
+        console.log("Welcome to the adventure!");
+        console.log("Available commands: go <dir>, pick <item>, inventory, look, quit\n");
+
+        // Start at the entrance
+        this.player.currentRoom = this.rooms["Entrance"];
+
+        // Main loop for game input
+        while (true) {
+            this.player.currentRoom.showDetails();
+
+            const input = await ask("");
+
+            if (input === "quit") break;
+
+            await this.processInput(input);
+        }
+
+        console.log("Thanks for playing!");
+        IO.close();
+    }
+
+    async processInput(cmd) {
+        const [action, arg] = cmd.split(" ");
+
+        switch (action) {
+            case "go":
+                this.player.move(arg, this.rooms);
+                await this.checkPuzzleTrigger();
+                break;
+
+            case "pick":
+                if (this.player.currentRoom.items.includes(arg)) {
+                    this.player.pick(arg);
+                    this.player.currentRoom.items = this.player.currentRoom.items.filter(
+                        (i) => i !== arg
+                    );
+                } else {
+                    console.log("That item isn't here.");
+                }
+                break;
+
+            case "inventory":
+                this.player.showInventory();
+                break;
+
+            case "look":
+            // Room details already shown at start of loop
+                // this.player.currentRoom.showDetails();
+                break;
+
+            default:
+                console.log("Command not recognized.");
+        }
+    }
+
+    // Activates room puzzle if conditions are met
+    async checkPuzzleTrigger() {
+        const room = this.player.currentRoom;
+
+        if (!room.puzzle || room.isPuzzleSolved) return;
+
+        if (room.puzzle === "LockedDoorPuzzle") {
+            LockedDoorPuzzle(this.player, room);
+        }
+
+        if (room.puzzle === "TorchPuzzle") {
+            TorchPuzzle(this.player, room);
+        }
+    }
+}
+
+export default GameManager;

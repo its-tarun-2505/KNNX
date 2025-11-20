@@ -1,4 +1,4 @@
-import { getPenalty, increaseScore, applyBonus } from '../utils/score_helper.js';
+import { getPenalty, increaseScore, applyBonus } from '../utils/score_helper.kn';
 
 class Player {
   constructor(name) {

@@ -1,6 +1,6 @@
 import readlineSync from 'readline-sync';
-import Player from "./Player.js";
-import questionBank from '../data/questions.js'
+import Player from "./Player.kn";
+import questionBank from '../data/questions.kn'
 
 class QuizMaster{
     constructor(){
@@ -15,7 +15,7 @@ class QuizMaster{
         this.difficulty = "";
         
         // Total number of questions in one quiz session
-        this.totalQuestions = 10;
+        this.totalQuestions = 5;
     }
 
     // This function kicks off the entire game

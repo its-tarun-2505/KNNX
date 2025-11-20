@@ -1,10 +1,10 @@
-import Player from "./Player.js";
-import Room from "./Room.js";
-import roomsData from "../data/rooms.js";
-import { IO, ask } from "../utils/input.js";
+import Player from "./Player.kn";
+import Room from "./Room.kn";
+import roomsData from "../data/rooms.kn";
+import { IO, ask } from "../utils/input.kn";
 
-import LockedDoorPuzzle from "./puzzles/LockedDoorPuzzle.js";
-import TorchPuzzle from "./puzzles/TorchPuzzle.js";
+import LockedDoorPuzzle from "./puzzles/LockedDoorPuzzle.kn";
+import TorchPuzzle from "./puzzles/TorchPuzzle.kn";
 
 class GameManager {
     constructor() {
